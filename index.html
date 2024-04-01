@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
   <script>
-      const games = ["'Bee Swarm Simulator':'HTML/beeswarm.html'", "'Cookie Clicker':'HTML/cookie-clicker'"];
+      const games = ["'Bee Swarm Simulator':'HTML/beeswarm.html'", "'Cookie Clicker':'HTML/cookie-clicker'", "'2048':'HTML/2048'", "'n-gon':'HTML/n-gon'", "'Chrome Dino Game':'HTML/chrome-dino'", "'Dadish':'HTML/Dadish'", "'Dadish 2':'HTML/Dadish2'"];
       function searchGame() {
           const input = document.querySelector('input[type="text"]').value;
-          let bestMatch = '';
-          let maxMatchLength = 0;
+          let matches = [];
           games.forEach(game => {
               const [gameTitle, gamePath] = game.split(':');
 
               const matchLength = input.length > gameTitle.length ? gameTitle.length : input.length;
-              if (input.toLowerCase() === gameTitle.slice(1, matchLength + 1).toLowerCase() && matchLength > maxMatchLength) {
-                  bestMatch = game;
-                  maxMatchLength = matchLength;
+              if (input.toLowerCase() === gameTitle.slice(1, matchLength + 1).toLowerCase()) {
+                  matches.push({ title: gameTitle, path: gamePath });
               }
           });
-          if (bestMatch) {
-              const [gameTitle, gamePath] = bestMatch.split(':');
-              document.getElementById('bestMatch').innerHTML = `<a href="${gamePath.replace(/'/g, '')}" style="color: #ffcc00; text-decoration: none;">${gameTitle.slice(1, -1)}</a>`;
-          } else {
-              alert('Game not found');
+          displayGames(matches);
+      }
+
+      function displayGames(matches) {
+          document.getElementById('bestMatch').innerHTML = '';
+          matches.forEach(match => {
+              const link = `<a href="${match.path.replace(/'/g, '')}" style="color: #ffcc00; text-decoration: none;">${match.title.slice(1, -1)}</a><br>`;
+              document.getElementById('bestMatch').innerHTML += link;
+          });
+          if (matches.length === 0) {
+              document.getElementById('bestMatch').innerHTML = 'No match found';
           }
       }
   </script>
@@ -36,26 +40,15 @@
             }
             input[type="text"] {
                 padding: 10px;
-                width: 200px;
+                width: calc(100% - 40px);
                 margin: 20px;
-            }
-            button {
-                padding: 10px 20px;
-                background-color: #555;
-                color: #fff;
-                border: none;
-                cursor: pointer;
-            }
-            button:hover {
-                background-color: #777;
             }
         </style>
     </head>
     <body>
         <h1>Search Programs</h1>
-        <input type="text" placeholder="Search for a game..." oninput="displayBestMatch()" />
+        <input type="text" id="searchbox" placeholder="Search for a game..." oninput="searchGame();" onload="searchGame()" style="width: calc(100% - 40px);"/>
         <div id="bestMatch"></div>
-        <button onclick="searchGame()" style="background-color: #333; color: #ffcc00; border: 2px solid #ffcc00;">Search</button>
 
         <script>
           function displayBestMatch() {
@@ -75,6 +68,7 @@
                 document.getElementById('bestMatch').innerHTML = 'No match found';
             }
           }
+        document.getElementById("searchbutton").click();
         </script>
     </body>
 </html>
