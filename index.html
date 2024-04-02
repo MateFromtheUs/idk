@@ -1,7 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
   <script>
-      const games = ["'Bee Swarm Simulator':'HTML/beeswarm.html'", "'Cookie Clicker':'HTML/cookie-clicker'", "'2048':'HTML/2048'", "'n-gon':'HTML/n-gon'", "'Chrome Dino Game':'HTML/chrome-dino'", "'Dadish':'HTML/Dadish'", "'Dadish 2':'HTML/Dadish2'"];
+      const games = ["'Bee Swarm Simulator':'HTML/beeswarm.html'", 
+                    "'Cookie Clicker':'HTML/cookie-clicker'", 
+                     "'2048':'HTML/2048'", 
+                     "'n-gon':'HTML/n-gon'", 
+                     "'Chrome Dino Game':'HTML/chrome-dino'",  
+                     "'Dadish':'/HTML/Dadish'",
+                     "'Dadish 2':'/HTML/Dadish2'",
+                     "'Dadish 3':'/HTML/Dadish3'",
+                     "'Portal the Flash Version (wcs)':'Flash/emulated/portal_wcs'", 
+                     "'Portal 2 the Flash Version (wixgames)':'Flash/emulated/portal_at'", 
+                    ];
       function searchGame() {
           const input = document.querySelector('input[type="text"]').value;
           let matches = [];
@@ -19,7 +29,8 @@
       function displayGames(matches) {
           document.getElementById('bestMatch').innerHTML = '';
           matches.forEach(match => {
-              const link = `<a href="${match.path.replace(/'/g, '')}" style="color: #ffcc00; text-decoration: none;">${match.title.slice(1, -1)}</a><br>`;
+              const link = `<a href="${match.path.replace(/'/g, '')}" style="color: #ffcc00; text-decoration: none;" oncontextmenu="showRightClickMenu(event)">${match.title.slice(1, -1)}</a></i><br>`;
+
               document.getElementById('bestMatch').innerHTML += link;
           });
           if (matches.length === 0) {
@@ -43,11 +54,98 @@
                 width: calc(100% - 40px);
                 margin: 20px;
             }
+            button {
+              cursor:pointer;
+              background-color: rgb(45, 45, 45);
+              color:white;
+
+            }
         </style>
     </head>
     <body>
-        <h1>Search Programs</h1>
-        <input type="text" id="searchbox" placeholder="Search for a game..." oninput="searchGame();" onload="searchGame()" style="width: calc(100% - 40px);"/>
+      <div id="rightClickMenu" class="rightClickMenu">
+        <button onclick="favoriteGame()">Favorite</button>
+        <button onclick="hideGame()">Hide</button>
+        <button onclick="addCustomScript()">Add Mods</button>
+        <button onclick="addCustomScript()">Download</button>
+      </div>
+      <script>
+
+        // Function to show right click menu
+        function showRightClickMenu(event) {
+          event.preventDefault();
+
+          var rightClickMenu = document.getElementById('rightClickMenu');
+          rightClickMenu.style.display = 'block';
+          rightClickMenu.style.top = (event.clientY) + 'px';
+          rightClickMenu.style.left = (event.clientX) + 'px';
+        }
+
+        // Function to hide right click menu
+        function hideRightClickMenu() {
+          var rightClickMenu = document.getElementById('rightClickMenu');
+          rightClickMenu.style.display = 'none';
+        }
+        // Function to show right-click menu with fade in effect
+        function showRightClickMenu(event) {
+          event.preventDefault();
+
+          var rightClickMenu = document.getElementById('rightClickMenu');
+          rightClickMenu.style.display = 'block';
+          rightClickMenu.style.top = (event.clientY) + 'px';
+          rightClickMenu.style.left = (event.clientX) + 'px';
+          rightClickMenu.style.opacity = 0;
+
+          // Fade in effect
+          setTimeout(function() {
+            rightClickMenu.style.opacity = 1;
+          }, 100);
+
+          // Hide menu when clicking outside of it
+          document.addEventListener('click', function(e) {
+            if (!rightClickMenu.contains(e.target)) {
+              rightClickMenu.style.opacity = 0;
+              setTimeout(function() {
+                rightClickMenu.style.display = 'none';
+              }, 300);
+            }
+          });
+        }
+      </script>
+      <style>
+        .gameContainer {
+          position: relative;
+        }
+
+        .gameContent {
+          /* Styling for game content */
+        }
+
+        .rightClickMenu {
+          display: none;
+          position: absolute;
+          background-color: #333;
+          color: #fff;
+          border: 1px solid #ccc;
+          padding: 5px;
+          width: 150px;
+        }
+
+        .rightClickMenu button {
+          background-color: #444;
+          color: #fff;
+          border: none;
+          padding: 5px;
+          margin: 5px 0;
+          cursor: pointer;
+        }
+
+        .rightClickMenu button:hover {
+          background-color: #555;
+        }
+      </style>
+<button style="position:fixed;right:10px;top:10px;">Add Game</button>
+        <input type="text" id="searchbox" placeholder="Search for a game..." oninput="searchGame();" onload="searchGame()" style="width: calc(100% - 40px);border-radius: 50px;border:none;outline:none;" autocomplete="off"/>
         <div id="bestMatch"></div>
 
         <script>
@@ -68,7 +166,7 @@
                 document.getElementById('bestMatch').innerHTML = 'No match found';
             }
           }
-        document.getElementById("searchbutton").click();
+          searchGame();
         </script>
     </body>
 </html>
