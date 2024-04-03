@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
-  <script>
+  <script src="sharedall.js"></script>
+  <div id="content"></div><script>
       const games = ["'Bee Swarm Simulator':'HTML/beeswarm.html'", 
                     "'Cookie Clicker':'HTML/cookie-clicker'", 
                      "'2048':'HTML/2048'", 
                      "'n-gon':'HTML/n-gon'", 
                      "'Chrome Dino Game':'HTML/chrome-dino'",  
-                     "'Dadish':'/HTML/Dadish'",
-                     "'Dadish 2':'/HTML/Dadish2'",
-                     "'Dadish 3':'/HTML/Dadish3'",
+                     "'Dadish':'../HTML/Dadish'",
+                     "'Dadish 2':'../HTML/Dadish2'",
+                     "'Dadish 3':'../HTML/Dadish3'",
                      "'Portal the Flash Version (wcs)':'Flash/emulated/portal_wcs'", 
                      "'Portal 2 the Flash Version (wixgames)':'Flash/emulated/portal_at'", 
                     ];
@@ -29,7 +30,7 @@
       function displayGames(matches) {
           document.getElementById('bestMatch').innerHTML = '';
           matches.forEach(match => {
-              const link = `<a href="${match.path.replace(/'/g, '')}" style="color: #ffcc00; text-decoration: none;" oncontextmenu="showRightClickMenu(event)">${match.title.slice(1, -1)}</a></i><br>`;
+              const link = `<a href="${match.path.replace(/'/g, '')}" style="color: white; text-decoration: none;" oncontextmenu="showRightClickMenu(event)">${match.title.slice(1, -1)}</a></i><br>`;
 
               document.getElementById('bestMatch').innerHTML += link;
           });
@@ -37,6 +38,41 @@
               document.getElementById('bestMatch').innerHTML = 'No match found';
           }
       }
+  </script>
+  <script>
+    // Function to toggle favorite status of a game
+    function toggleFavorite(game) {
+      // Get the favorite games list from local storage
+      var favoriteGames = localStorage.getItem('favoriteGames');
+
+      if (favoriteGames == null) {
+        // If no favorite games are stored, create a new list with the current game
+        localStorage.setItem('favoriteGames', JSON.stringify([game]));
+        console.log(game + ' favorited!');
+      } else {
+        // Parse the JSON array of favorite games
+        var favoriteGamesArray = JSON.parse(favoriteGames);
+
+        if (favoriteGamesArray.includes(game)) {
+          // Unfavorite the game by removing it from the list
+          favoriteGamesArray = favoriteGamesArray.filter(item => item !== game);
+          localStorage.setItem('favoriteGames', JSON.stringify(favoriteGamesArray));
+          console.log(game + ' unfavorited.');
+        } else {
+          // Favorite the game by adding it to the list
+          favoriteGamesArray.push(game);
+          localStorage.setItem('favoriteGames', JSON.stringify(favoriteGamesArray));
+          console.log(game + ' favorited!');
+        }
+      }
+    }
+
+    // Check if the game has been favorited
+    if (isGameFavorited(game)) {
+      console.log(game + ' is favorited!');
+    } else {
+      console.log(game + ' is not favorited.');
+    }
   </script>
     <head>
         <meta charset="UTF-8">

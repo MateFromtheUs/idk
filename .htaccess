@@ -1,0 +1,4 @@
+RewriteEngine on
+RewriteCond %{REQUEST_URI} !\.(jpg|png|gif)$
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteRule ^(.*)$ /offline.html [L]
