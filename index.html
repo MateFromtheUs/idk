@@ -2,14 +2,15 @@
 <html lang="en" manifest="manifest.mf">
   <script src="sharedall.js"></script>
   <div id="content"></div><script>
+    var gameselect;
       const games = ["'Bee Swarm Simulator':'HTML/beeswarm.html'", 
                     "'Cookie Clicker':'HTML/cookie-clicker'", 
                      "'2048':'HTML/2048'", 
                      "'n-gon':'HTML/n-gon'", 
                      "'Chrome Dino Game':'HTML/chrome-dino'",  
-                     "'Dadish':'../HTML/Dadish'",
-                     "'Dadish 2':'../HTML/Dadish2'",
-                     "'Dadish 3':'../HTML/Dadish3'",
+                     "'Dadish':'HTML/Dadish'",
+                     "'Dadish 2':'HTML/Dadish2'",
+                     "'Dadish 3':'HTML/Dadish3'",
                      "'Portal the Flash Version (wcs)':'Flash/emulated/portal_wcs'", 
                      "'Portal 2 the Flash Version (wixgames)':'Flash/emulated/portal_at'", 
                     ];
@@ -30,7 +31,7 @@
       function displayGames(matches) {
           document.getElementById('bestMatch').innerHTML = '';
           matches.forEach(match => {
-              const link = `<a href="${match.path.replace(/'/g, '')}" style="color: white; text-decoration: none;" oncontextmenu="showRightClickMenu(event)">${match.title.slice(1, -1)}</a></i><br>`;
+              const link = `<a href="${match.path.replace(/'/g, '')}" style="color: white; text-decoration: none;" oncontextmenu="gameselect="${match.path.replace(/'/g, '')}";showRightClickMenu(event)">${match.title.slice(1, -1)}</a></i><br>`;
 
               document.getElementById('bestMatch').innerHTML += link;
           });
@@ -100,7 +101,7 @@
     </head>
     <body>
       <div id="rightClickMenu" class="rightClickMenu">
-        <button onclick="favoriteGame()">Favorite</button>
+        <button onclick="toggleFavorite(gameselect)">Favorite</button>
         <button onclick="hideGame()">Hide</button>
         <button onclick="addCustomScript()">Add Mods</button>
         <button onclick="addCustomScript()">Download</button>
@@ -180,7 +181,7 @@
           background-color: #555;
         }
       </style>
-<button style="position:fixed;right:10px;top:10px;">Add Game</button>
+<button style="border:white solid 2px;position:fixed;z-index:99;right:10px;top:10px;background:none;">Add Game</button><button style="border:white solid 2px;position:fixed;z-index:99;right:100px;top:10px;background:none;" onclick="window.open('abtab/thistab', '_self')">Open in About Blank</button><br>
         <input type="text" id="searchbox" placeholder="Search for a game..." oninput="searchGame();" onload="searchGame()" style="width: calc(100% - 40px);border-radius: 50px;border:none;outline:none;" autocomplete="off"/>
         <div id="bestMatch"></div>
 
