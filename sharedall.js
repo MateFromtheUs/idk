@@ -27,22 +27,41 @@ function getModsForGame(gameTitle) {
     return [];
   }
 }
-function loadGameWithMods(gameTitle, games) {
+function loadGameWithMods(gameTitle, gamesArray) {
   const mods = getModsForGame(gameTitle);
 
-  const game = games.find((game) => game.title === gameTitle);
+  console.log('Searching for game:', gameTitle);
+  console.log('All Games:', gamesArray);
+
+  const game = gamesArray.find(game => game.includes(gameTitle));
 
   if (game) {
-    mods.forEach((mod) => {
-      // Dynamically inject and execute the mod code in the current window context
-      const scriptElement = document.createElement('script');
-      scriptElement.textContent = mod.code;
-      document.body.appendChild(scriptElement);
-    });
+    const [foundGameTitle, path] = game.split(":");
 
-    // Redirect to the game HTML file path from the games array after injecting mods
-    window.location.href = game.path;
+    const iframe = document.createElement('iframe');
+    iframe.style.width = "100%"; // Set the width of the iframe to 100%
+    iframe.style.height = "100%"; // Set the height of the iframe to 100%
+    iframe.style.position = "fixed";
+    iframe.style.top = "0";
+    iframe.style.left = "0";
+    document.body.appendChild(iframe);
+
+    iframe.onload = () => {
+      mods.forEach((mod) => {
+        const scriptElement = iframe.contentDocument.createElement('script');
+        scriptElement.textContent = mod.code;
+        iframe.contentDocument.body.appendChild(scriptElement);
+      });
+
+      console.log('Game found:', foundGameTitle);
+      console.log('Mods:', mods);
+    };
+
+    iframe.src = path.replace(/'/g, '').replace(/'/g, '').trim(); // Trim any leading or trailing spaces and remove extra quotes
   } else {
-    console.error(`Game '${gameTitle}' not found in the games array.`);
+    console.error(`Game '${gameTitle}' not found in the Games array.`);
   }
 }
+
+
+
