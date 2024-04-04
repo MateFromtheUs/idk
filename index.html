@@ -162,7 +162,7 @@
         <button onclick="toggleFavorite(gameselect);if(isGameFavorited(gameselect)){getLinkByText(gameselect).style.color = 'yellow'}else{getLinkByText(gameselect).style.color = 'white'};location.reload()">Favorite</button>
         <button onclick="hideGame()">Hide</button>
         <button onclick='addCustomScript(gameselect)'>Add Mods</button>
-        <button onclick="">Download</button>
+        <button onclick="getLinkByText(gameselect).setAttribute('download', gameselect);getLinkByText(gameselect).click();getLinkByText().removeAttribute('download')">Download</button>
         <button onclick="loadGameWithMods(gameselect, games)">Play Game with Mods</button>
       </div>
       <script>
