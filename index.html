@@ -3,17 +3,6 @@
   <script src="sharedall.js"></script>
   <div id="content"></div><script>
     var gameselect;
-      const games = ["'Bee Swarm Simulator':'HTML/beeswarm.html'", 
-                    "'Cookie Clicker':'HTML/cookie-clicker'", 
-                     "'2048':'HTML/2048'", 
-                     "'n-gon':'HTML/n-gon'", 
-                     "'Chrome Dino Game':'HTML/chrome-dino'",  
-                     "'Dadish':'HTML/Dadish'",
-                     "'Dadish 2':'HTML/Dadish2'",
-                     "'Dadish 3':'HTML/Dadish3'",
-                     "'Portal the Flash Version (wcs)':'Flash/emulated/portal_wcs'", 
-                     "'Portal 2 the Flash Version (wixgames)':'Flash/emulated/portal_at'", 
-                    ];
       function searchGame() {
           const input = document.querySelector('input[type="text"]').value;
           let matches = [];
@@ -27,20 +16,94 @@
           });
           displayGames(matches);
       }
+    function addMod(gameTitle, modName, modCode) {
+      let mods = JSON.parse(localStorage.getItem('mods')) || {};
+      mods[gameTitle] = mods[gameTitle] || [];
 
-      function displayGames(matches) {
-          document.getElementById('bestMatch').innerHTML = '';
-          matches.forEach(match => {
-              const link = `<a href="${match.path.replace(/'/g, '')}" style="color: white; text-decoration: none;" oncontextmenu="gameselect="${match.path.replace(/'/g, '')}";showRightClickMenu(event)">${match.title.slice(1, -1)}</a></i><br>`;
+      mods[gameTitle].push({ name: modName, code: modCode });
+      localStorage.setItem('mods', JSON.stringify(mods));
 
-              document.getElementById('bestMatch').innerHTML += link;
-          });
-          if (matches.length === 0) {
-              document.getElementById('bestMatch').innerHTML = 'No match found';
-          }
+      console.log(`${modName} added to ${gameTitle}`);
+    }
+
+    function toggleMod(gameTitle, modName) {
+      let mods = JSON.parse(localStorage.getItem('mods')) || {};
+      if (mods[gameTitle]) {
+        const modIndex = mods[gameTitle].findIndex((mod) => mod.name === modName);
+        if (modIndex !== -1) {
+          mods[gameTitle].splice(modIndex, 1);
+          localStorage.setItem('mods', JSON.stringify(mods));
+          console.log(`${modName} removed from ${gameTitle}'s mods`);
+        } else {
+          console.log(`${modName} not found in ${gameTitle}'s mods`);
+        }
       }
+    }
+
+    function displayGames(games) {
+        const container = document.getElementById("bestMatch");
+
+        if (container) {
+            container.innerHTML = "";
+
+            games.forEach(game => {
+                const isFavorited = isGameFavorited(game.title);
+                const textColor = isFavorited ? "yellow" : "white";
+                const gameLink = `<a href="${game.path.replace(/'/g, "")}" style="color: ${textColor}; text-decoration: none;" oncontextmenu="gameselect='${game.title.slice(1, -1)}';showRightClickMenu(event)">${game.title.slice(1, -1)}</a><br>`;
+
+                container.insertAdjacentHTML("beforeend", gameLink);
+            });
+        } else {
+            console.error("Element with id 'bestMatch' not found.");
+        }
+    }
+
+
+    //Get favorited games and move to top of search results
+    function getFavoritedGames(){
+        const favoritedGames = JSON.parse(localStorage.getItem("favoritedGames")) || [];
+        const favoritedGamesList = document.getElementById("favoritedGames");
+        favoritedGamesList.innerHTML = "";
+
+        favoritedGames.forEach(game => {
+            const gameLink = `<a href="${game.path.replace(/'/g, "")}" style="color: yellow; text-decoration: none;" oncontextmenu="gameselect='${game.title.slice(1, -1)}';showRightClickMenu(event)">${game.title.slice(1, -1)}</a><br>`;
+            favoritedGamesList.insertAdjacentHTML("beforeend", gameLink);
+        });
+    }
+    //Moves to the top of search results
+    function moveToTop(){
+        const favoritedGames = getFavoritedGames()
+        const favoritedGamesList = document.getElementById("favoritedGames");
+        favoritedGamesList.innerHTML = "";
+
+        favoritedGames.forEach(game => {
+            const gameLink = `<a href="${game.path.replace(/'/g, "")}" style="color: yellow; text-decoration: none;" oncontextmenu="gameselect='${game.title.slice(1, -1)}';showRightClickMenu(event)">${game.title.slice(1, -1)}</a><br>`;
+            favoritedGamesList.insertAdjacentHTML("beforeend", gameLink);
+        });
+    }
+    moveToTop()
+
+    function isGameFavorited(title) {
+        var favoriteGames = JSON.parse(localStorage.getItem("favoriteGames")) || [];
+        return favoriteGames.includes(title.split("'")[1]);
+    }
+
+
+
   </script>
   <script>
+    function getLinkByText(linkText) {
+        const links = document.querySelectorAll('a');
+
+        for (let i = 0; i < links.length; i++) {
+            if (links[i].innerText === linkText) {
+                return links[i];
+            }
+        }
+
+        return null; // Return null if no matching link is found
+    }
+
     // Function to toggle favorite status of a game
     function toggleFavorite(game) {
       // Get the favorite games list from local storage
@@ -68,12 +131,7 @@
       }
     }
 
-    // Check if the game has been favorited
-    if (isGameFavorited(game)) {
-      console.log(game + ' is favorited!');
-    } else {
-      console.log(game + ' is not favorited.');
-    }
+
   </script>
     <head>
         <meta charset="UTF-8">
@@ -101,21 +159,19 @@
     </head>
     <body>
       <div id="rightClickMenu" class="rightClickMenu">
-        <button onclick="toggleFavorite(gameselect)">Favorite</button>
+        <button onclick="toggleFavorite(gameselect);if(isGameFavorited(gameselect)){getLinkByText(gameselect).style.color = 'yellow'}else{getLinkByText(gameselect).style.color = 'white'};location.reload()">Favorite</button>
         <button onclick="hideGame()">Hide</button>
-        <button onclick="addCustomScript()">Add Mods</button>
-        <button onclick="addCustomScript()">Download</button>
+        <button onclick='addCustomScript(gameselect)'>Add Mods</button>
+        <button onclick="">Download</button>
+        <button onclick="loadGameWithMods(gameselect, games)">Play Game with Mods</button>
       </div>
       <script>
 
-        // Function to show right click menu
-        function showRightClickMenu(event) {
-          event.preventDefault();
-
-          var rightClickMenu = document.getElementById('rightClickMenu');
-          rightClickMenu.style.display = 'block';
-          rightClickMenu.style.top = (event.clientY) + 'px';
-          rightClickMenu.style.left = (event.clientX) + 'px';
+        
+        function addCustomScript(gameTitle) {
+          const modName = prompt("Enter mod name:");
+          const modCode = prompt("Enter mod code:");
+          addMod(gameTitle, modName, modCode);
         }
 
         // Function to hide right click menu
@@ -183,6 +239,7 @@
       </style>
 <button style="border:white solid 2px;position:fixed;z-index:99;right:10px;top:10px;background:none;">Add Game</button><button style="border:white solid 2px;position:fixed;z-index:99;right:100px;top:10px;background:none;" onclick="window.open('abtab/thistab', '_self')">Open in About Blank</button><br>
         <input type="text" id="searchbox" placeholder="Search for a game..." oninput="searchGame();" onload="searchGame()" style="width: calc(100% - 40px);border-radius: 50px;border:none;outline:none;" autocomplete="off"/>
+        <div id="favoritedGames"></div>
         <div id="bestMatch"></div>
 
         <script>
