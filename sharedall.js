@@ -63,5 +63,48 @@ function loadGameWithMods(gameTitle, gamesArray) {
   }
 }
 
+function addCustomGame(customGameCode) {
+  let customGames = JSON.parse(localStorage.getItem('customGames')) || [];
+
+  const newGameID = Date.now(); // Generate a unique ID for the new custom game
+  customGames.push({ id: newGameID, code: customGameCode });
+
+  localStorage.setItem('customGames', JSON.stringify(customGames));
+
+  console.log(`New custom game with ID ${newGameID} added.`);
+}
+
+function loadCustomGames() {
+  const customGames = JSON.parse(localStorage.getItem('customGames')) || [];
+
+  const gameContainer = document.getElementById('gameContainer');
+  gameContainer.innerHTML = '';
+
+  if (customGames.length > 0) {
+    customGames.forEach(game => {
+      const gameElement = document.createElement('div');
+      gameElement.innerHTML = game.code;
+
+      gameContainer.appendChild(gameElement);
+    });
+  } else {
+    console.log('No custom games found.');
+  }
+}
+
+// Call loadCustomGames() on page load
+document.addEventListener('DOMContentLoaded', function() {
+  loadCustomGames();
+});
+
+function saveCustomGame() {
+  const customGameCode = document.getElementById('customGameCode').value;
+  if (customGameCode.trim() !== '') {
+    addCustomGame(customGameCode);
+    loadCustomGames(); // Reload the list of custom games
+  } else {
+    console.error('Cannot save an empty custom game.');
+  }
+}
 
 

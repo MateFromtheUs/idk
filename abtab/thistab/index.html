@@ -1,9 +1,18 @@
 <script>
   var newtab = window.open();
 
-  newtab.document.write(`<head><link type="icon/ico" rel="icon" href="https://google.com/favicon.ico">
-  <title>Google</title></head>
-  <iframe style="position:absolute; left:0;top:0;width:100%;height:100%;"src="` + "https://631space.github.io/" + `" width="100%" height="100%"></iframe>
-  `)
-  window.location.replace("https://google.com")
+  newtab.document.write(`
+    <!DOCTYPE html>
+    <html>
+      <head>
+        <link type="image/x-icon" rel="icon" href="../favicon.ico">
+        <title>Google</title>
+      </head>
+      <body>
+        <iframe style="position:absolute; left:0;top:0;width:100%;height:100%;" src="https://631space.github.io" width="100%" height="100%"></iframe>
+      </body>
+    </html>
+  `);
+
+  window.location.replace("https://google.com");
 </script>
