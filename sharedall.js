@@ -7,7 +7,8 @@ const games = ["'Bee Swarm Simulator':'HTML/beeswarm.html'",
  "'Dadish 2':'HTML/Dadish2'",
  "'Dadish 3':'HTML/Dadish3'",
  "'Portal the Flash Version (wcs)':'Flash/emulated/portal_wcs'", 
- "'Portal 2 the Flash Version (wixgames)':'Flash/emulated/portal_at'", "'Super Mario Bros 63 (Unofficial Flash)':'Flash/emulated/smb63'", "'The Impossible Quiz':'Flash/emulated/tiq/index.html'"
+ "'Portal 2 the Flash Version (wixgames)':'Flash/emulated/portal_at'", "'Super Mario Bros 63 (Unofficial Flash)':'Flash/emulated/smb63'", "'The Impossible Quiz':'Flash/emulated/tiq/index.html'", "'Cubefield':'Flash/emulated/cubefield'", "'Run 3':'Flash/emulated/run3'",
+               "'Play this On Max Volume': 'HTML/playthisonmaxvolume'"
 ];
 self.addEventListener('fetch', function(event) {
   event.respondWith(
@@ -108,3 +109,15 @@ function saveCustomGame() {
 }
 
 
+document.addEventListener('keydown', function(event) {
+    if (event.ctrlKey && event.shiftKey && event.key === 'q') {
+        event.preventDefault();
+        event.stopPropagation();
+        return false
+    }
+});
+document.addEventListener('keydown', function(event) {
+    if (event.ctrlKey && event.key === 'w') {
+        event.preventDefault();
+    }
+});

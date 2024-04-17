@@ -1,7 +1,17 @@
 <!DOCTYPE html>
+
 <html lang="en" manifest="manifest.mf">
+  <script>
+  </script>
+  <script>
+    // Wait for the iframe to load before showing the rest of the content
+    document.getElementById('notfoundFrame').addEventListener('load', function() {
+      document.getElementById('body').style.display = 'block';
+      // Any other initialization code can go here
+    });
+  </script>
   <script src="sharedall.js"></script>
-  <div id="content"></div><script>
+  <div id="content"></div><script defer>
     var gameselect;
       function searchGame() {
           const input = document.querySelector('input[type="text"]').value;
@@ -91,7 +101,7 @@
 
 
   </script>
-  <script>
+  <script defer>
     function getLinkByText(linkText) {
         const links = document.querySelectorAll('a');
 
@@ -158,7 +168,7 @@
             }
         </style>
     </head>
-    <body>
+    <body id="body">
       <div id="rightClickMenu" class="rightClickMenu">
         <button onclick="toggleFavorite(gameselect);if(isGameFavorited(gameselect)){getLinkByText(gameselect).style.color = 'yellow'}else{getLinkByText(gameselect).style.color = 'white'};location.reload()">Favorite</button>
         <button onclick="hideGame()">Hide</button>
@@ -166,7 +176,7 @@
         <button onclick="getLinkByText(gameselect).setAttribute('download', gameselect);getLinkByText(gameselect).click();getLinkByText().removeAttribute('download')">Download</button>
         <button onclick="loadGameWithMods(gameselect, games)">Play Game with Mods</button>
       </div>
-      <script>
+      <script defer>
 
         
         function addCustomScript(gameTitle) {
@@ -238,12 +248,12 @@
           background-color: #555;
         }
       </style>
-<button style="border:white solid 2px;position:fixed;z-index:99;right:10px;top:10px;background:none;">Add Game</button><button style="border:white solid 2px;position:fixed;z-index:99;right:100px;top:10px;background:none;" onclick="window.open('abtab/thistab', '_self')">Open in About Blank</button><br>
+<button style="border:white solid 2px;position:fixed;z-index:99;right:10px;top:10px;background:none;">Add Game</button><button style="border:white solid 2px;position:fixed;z-index:99;right:100px;top:10px;background:none;" onclick="window.open('abtab', '_self')">Open About Blank</button><br>
         <input type="text" id="searchbox" placeholder="Search for a game..." oninput="searchGame();" onload="searchGame()" style="width: calc(100% - 40px);border-radius: 50px;border:none;outline:none;" autocomplete="off"/>
         <div id="favoritedGames"></div>
         <div id="bestMatch"></div></div></div>
 
-        <script>
+        <script defer>
           function displayBestMatch() {
             const input = document.querySelector('input[type="text"]').value;
             let bestMatch = '';
