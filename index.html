@@ -17,7 +17,7 @@
           const input = document.querySelector('input[type="text"]').value;
           let matches = [];
           games.forEach(game => {
-              const [gameTitle, gameaPath] = game.split(':');
+              const [gameTitle, gamePath] = game.split(':');
 
               const matchLength = input.length > gameTitle.length ? gameTitle.length : input.length;
               if (input.toLowerCase() === gameTitle.slice(1, matchLength + 1).toLowerCase()) {
